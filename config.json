@@ -1,0 +1,24 @@
+﻿{
+    "general": {
+        "debug": false,
+        "texture": "Default"
+    },
+    "game": {
+        "note_speed": 8,
+        "auto_play": false,
+        "window_vibration": true,
+        "judge": {
+            "perfect": 0.05,
+            "good": 0.1,
+            "miss": 0.3,
+            "auto_perfect": 0.01
+        },
+        "score": {
+            "perfect": 1000,
+            "good": 500,
+            "long": 50,
+            "ex_boost": 3,
+            "long_boost": 2
+        }
+    }
+}

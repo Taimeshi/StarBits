@@ -1,0 +1,15 @@
+title_start
+mode_scroll
+click
+tap_perf
+tap_good
+fuzzy
+extap
+space
+cursor
+open_cursor_menu
+close_cursor_menu
+song_selected
+count_number
+rank
+special_clear
