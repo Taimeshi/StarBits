@@ -1,12 +1,23 @@
 import pygame as pg
 import os
+import sys
 from PIL import Image, ImageFilter
 
 import util
 from game_enums import *
 
 
-PROJ_PATH = os.path.dirname(os.path.abspath(__file__))
+def find_data_file():
+    if getattr(sys, "frozen", False):
+        # The application is frozen
+        return os.path.dirname(sys.executable)
+    # The application is not frozen
+    # Change this bit to match where you store your data files:
+    return os.path.dirname(__file__)
+
+
+# PROJ_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJ_PATH = find_data_file()
 RESOURCES_PATH = os.path.join(PROJ_PATH, "resources")
 
 pg.init()  # set_mode後にしかconvert_alphaは使えない
@@ -92,23 +103,23 @@ resource_members = {ResourceCategory.GRAPHICS: [
     [GAME_FILENAME, "click_effect"],
     [GAME_FILENAME, "collect_effect"],
     [GAME_FILENAME, "game_details"]
-    
-    ], ResourceCategory.SE: [
+
+], ResourceCategory.SE: [
     "title_start", "mode_scroll", "click", "tap_perf", "tap_good", "fuzzy", "extap", "space",
     "cursor", "open_pause_menu", "close_pause_menu", "song_selected", "count_number", "rank",
     "clear", "failed"
-    ], ResourceCategory.BGM_PATH: ["result", "title"],
+], ResourceCategory.BGM_PATH: ["result", "title"],
     ResourceCategory.FONTS: [
-    ["ARIALUNI.TTF", 15, "arial_tiny"],  # 判定バー
-    ["ARIALUNI.TTF", 30, "arial_small"],  # オプション・判定カウント・スコア
-    ["ARIALUNI.TTF", 35, "arial_small2"],  # コントロールの中の文字
-    ["ARIALUNI.TTF", 45, "arial_regular"],  # 設定画面
-    ["ARIALUNI.TTF", 200, "arial_huge"],  # カウントダウン
-    ["Molot.otf", 16, "molot_tiny"],  # 曲詳細の文字(小)
-    ["Molot.otf", 20, "molot_small1"],  # 曲詳細の文字(大)
-    ["Molot.otf", 30, "molot_small2"],  # 曲選択場面のレベルの文字
-    ["Molot.otf", 50, "molot_regular"],  # 曲選択場面のレベルの文字(中央のやつ)
-    ["Molot.otf", 80, "molot_big"],  # コンボ・リザルト画面のスコア
+        ["ARIALUNI.TTF", 15, "arial_tiny"],  # 判定バー
+        ["ARIALUNI.TTF", 30, "arial_small"],  # オプション・判定カウント・スコア
+        ["ARIALUNI.TTF", 35, "arial_small2"],  # コントロールの中の文字
+        ["ARIALUNI.TTF", 45, "arial_regular"],  # 設定画面
+        ["ARIALUNI.TTF", 200, "arial_huge"],  # カウントダウン
+        ["Molot.otf", 16, "molot_tiny"],  # 曲詳細の文字(小)
+        ["Molot.otf", 20, "molot_small1"],  # 曲詳細の文字(大)
+        ["Molot.otf", 30, "molot_small2"],  # 曲選択場面のレベルの文字
+        ["Molot.otf", 50, "molot_regular"],  # 曲選択場面のレベルの文字(中央のやつ)
+        ["Molot.otf", 80, "molot_big"],  # コンボ・リザルト画面のスコア
     ]
 }
 
@@ -228,7 +239,7 @@ class Resources:
         self.loading = True
         self.loading_category: ResourceCategory = ResourceCategory.GRAPHICS
         self.loading_iterator = 0
-
+    
     def _img_path(self, folder_name: str, filename: str) -> str:
         path = self._GRAPHICS_PATH
         for d in [folder_name, filename]:
@@ -251,11 +262,11 @@ class Resources:
             folder_tmp = os.path.join(self._GRAPHICS_PATH, progressing_member[0])
             self.new_resources[ResourceCategory.GRAPHICS][progressing_member[1]] = \
                 pg.image.load(os.path.join(folder_tmp, progressing_member[1]) + ".png").convert_alpha()
-            
+        
         elif self.loading_category == ResourceCategory.SE:
             self.new_resources[ResourceCategory.SE][progressing_member] = \
                 pg.mixer.Sound(os.path.join(self._SE_PATH, progressing_member) + ".mp3")
-            
+        
         elif self.loading_category == ResourceCategory.BGM_PATH:
             self.new_resources[ResourceCategory.BGM_PATH][progressing_member] = \
                 os.path.join(self._BGM_PATH, progressing_member) + ".mp3"
@@ -331,24 +342,24 @@ class Resources:
             Difficulty.EASY: pg.image.load(self._img_path(SELECT_FILENAME, "dif_easy")).convert_alpha(),
             Difficulty.HARD: pg.image.load(self._img_path(SELECT_FILENAME, "dif_hard")).convert_alpha(),
             Difficulty.IMP: pg.image.load(self._img_path(SELECT_FILENAME, "dif_imp")).convert_alpha()}
-    
+        
         self.new_resources[ResourceCategory.GRAPHICS]["note_images"] = {
             NoteType.TAP: pg.image.load(self._img_path(GAME_FILENAME, "tap")).convert_alpha(),
             NoteType.EX_TAP: pg.image.load(self._img_path(GAME_FILENAME, "ex_tap")).convert_alpha(),
             NoteType.FUZZY: pg.image.load(self._img_path(GAME_FILENAME, "fuzzy")).convert_alpha(),
             NoteType.LONG: pg.image.load(self._img_path(GAME_FILENAME, "long_tap")).convert_alpha()}
-
+        
         self.new_resources[ResourceCategory.GRAPHICS]["long_textures"] = [
             pg.image.load(self._img_path(GAME_FILENAME, "long_texture")).convert_alpha(),
             pg.image.load(self._img_path(GAME_FILENAME, "long_texture_pressing")).convert_alpha(),
             pg.image.load(self._img_path(GAME_FILENAME, "long_texture_missed")).convert_alpha()
         ]
-    
+        
         self.new_resources[ResourceCategory.GRAPHICS]["judge_images"] = {
             Judge.PERFECT: pg.image.load(self._img_path(GAME_FILENAME, "perfect")).convert_alpha(),
             Judge.GOOD: pg.image.load(self._img_path(GAME_FILENAME, "good")).convert_alpha(),
             Judge.MISS: pg.image.load(self._img_path(GAME_FILENAME, "miss")).convert_alpha()}
-    
+        
         self.new_resources[ResourceCategory.GRAPHICS]["ap_small_img"] = \
             pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][ALL_PERFECT_IMG], 0, 0.5)
         self.new_resources[ResourceCategory.GRAPHICS]["fc_small_img"] = \
@@ -357,7 +368,7 @@ class Resources:
             pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][LEVEL_CLEAR_IMG], 0, 0.5)
         self.new_resources[ResourceCategory.GRAPHICS]["lf_small_img"] = \
             pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][LEVEL_FAILED_IMG], 0, 0.5)
-    
+        
         self.new_resources[ResourceCategory.GRAPHICS]["rank_images"] = \
             [pg.image.load(self._img_path(GAME_FILENAME, f"star{r_i}")).convert_alpha() for r_i in range(6)]
         self.new_resources[ResourceCategory.GRAPHICS]["rank_base_images"] = \
@@ -370,7 +381,7 @@ class Resources:
         clear_particles_base = pg.image.load(self._img_path(GAME_FILENAME, "clear_particles")).convert_alpha()
         for cp_i, cp in enumerate(self.new_resources[ResourceCategory.GRAPHICS]["clear_particles"]):
             cp.fill(util.CLEAR)
-            cp.blit(clear_particles_base, [0, 0], [10*cp_i, 0, 10, 10])
+            cp.blit(clear_particles_base, [0, 0], [10 * cp_i, 0, 10, 10])
     
     @property
     def category_all_loaded(self) -> bool:
