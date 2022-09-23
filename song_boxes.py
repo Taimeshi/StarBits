@@ -118,11 +118,12 @@ class SongBoxes:
 			draw_box()
 		
 		if self.scroll == 0:  # 中央のボックス
+			center_song = self.displaying_songs[prepared_box]
 			box_pos = [10 + 10, 300 + self.scroll - 10]
 			now_box = pg.transform.smoothscale(self.rs.graphic(BOX_IMAGES)[self.difficulty], [420, 120])
 			box_polygon = ((box_pos[0], box_pos[1]), (box_pos[0] + 378, box_pos[1]),
 			               (box_pos[0] + 419, box_pos[1] + 119), (box_pos[0] + 45, box_pos[1] + 119))
-			title_tmp = self.rs.font(ARIAL_REGULAR_FONT).render(s.get_title()[:14], True, util.WHITE)
+			title_tmp = self.rs.font(ARIAL_REGULAR_FONT).render(center_song.get_title()[:14], True, util.WHITE)
 			if title_tmp.get_width() > 400:
 				title = pg.surface.Surface((title_tmp.get_width() * 2 + 50, title_tmp.get_height()),
 				                           pg.SRCALPHA)
@@ -137,7 +138,8 @@ class SongBoxes:
 				title_pos = [box_pos[0] + 30, box_pos[1] + (120 - title_tmp.get_height()) / 2]
 				title_clip_rect = [0, 0, *title.get_size()]
 			
-			level_sf = self.rs.font(MOLOT_REGULAR_FONT).render(str(s.get_level(self.difficulty)), True, util.WHITE)
+			level_sf = self.rs.font(MOLOT_REGULAR_FONT).render\
+				(str(center_song.get_level(self.difficulty)), True, util.WHITE)
 			level_pos = [box_pos[0] + 420 - 25 - level_sf.get_width() / 2,
 			             box_pos[1] + 120 - 25 - level_sf.get_height() / 2]
 			draw_box()
