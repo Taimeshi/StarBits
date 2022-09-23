@@ -5,6 +5,7 @@ import util
 
 
 prepared_box = 6
+# MEMO: 1ボックスの高さは100px
 
 
 class SongBoxes:
@@ -30,9 +31,9 @@ class SongBoxes:
 		songs_path = os.listdir(os.path.join(PROJ_PATH, "songs"))
 		self.songs = [Song(p, self.proj_config) for p in songs_path]
 		self.displaying_songs = []
-		self.update_selecting_around()
+		self.update_displaying_songs()
 	
-	def update_selecting_around(self):
+	def update_displaying_songs(self):
 		self.displaying_songs = []
 		for b_i2 in range(-prepared_box, prepared_box + 1):
 			self.displaying_songs.append(self.songs[(self.selecting_num + b_i2) % self.song_number])
@@ -46,15 +47,15 @@ class SongBoxes:
 		
 		# 移動
 		if not self.song_selected:
-			if keys.just_left and self.scroll > -300:
+			if keys.just_left and self.scroll > -100 * (prepared_box-3):
 				self.selecting_num = (self.selecting_num - 1) % self.song_number
 				self.scroll -= 100
-				self.update_selecting_around()
+				self.update_displaying_songs()
 				self.tmr_standby = 0
-			if keys.just_right and self.scroll < 300:
+			if keys.just_right and self.scroll < 100 * (prepared_box-3):
 				self.selecting_num = (self.selecting_num + 1) % self.song_number
 				self.scroll += 100
-				self.update_selecting_around()
+				self.update_displaying_songs()
 				self.tmr_standby = 0
 			
 		# スクロール
