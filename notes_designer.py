@@ -30,6 +30,7 @@ def main():
     cl = pg.time.Clock()
     with open(os.path.join(PROJ_PATH, "config.json"), "r", encoding="utf-8_sig") as j:
         config: dict = json.load(j)
+    tmr = 0
     rs = Resources(config)
     rs.start_load()
     tmp_font = pg.font.Font(None, 30)
@@ -119,6 +120,7 @@ def main():
         return c, int_m, be
     
     while True:
+        tmr += 1
         
         for e in pg.event.get():
             if e.type == pg.QUIT:
@@ -143,12 +145,14 @@ def main():
                         if shift_clicking:
                             scroll -= 900
                         scroll = max(-100, scroll)
+            
             if e.type == pg.KEYDOWN:
                 if e.key == pg.K_n:  # ノーツの種類
                     note_types = [n for n in NoteType]
                     if note_type_current == NoteType.LONG:
                         long_start_tmp = None
                     note_type_current = note_types[(note_types.index(note_type_current) + 1) % len(note_types)]
+                
                 if e.key == pg.K_z:  # 拍数
                     splitting -= 1
                     splitting = max(1, splitting)
