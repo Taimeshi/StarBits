@@ -44,6 +44,7 @@ TITLE_FILENAME = "0. title"
 SELECT_FILENAME = "1. select"
 GAME_FILENAME = "2. game"
 RESULT_FILENAME = "3. result"
+TRAILBLAZER_FILENAME = "4. trailblazer"
 
 
 class ResourceCategory(Enum):
@@ -102,7 +103,8 @@ resource_members = {ResourceCategory.GRAPHICS: [
     [GAME_FILENAME, "arrow"],
     [GAME_FILENAME, "click_effect"],
     [GAME_FILENAME, "collect_effect"],
-    [GAME_FILENAME, "game_details"]
+    [GAME_FILENAME, "game_details"],
+    [TRAILBLAZER_FILENAME, "background"]
 
 ], ResourceCategory.SE: [
     "title_start", "mode_scroll", "click", "tap_perf", "tap_good", "fuzzy", "extap", "space",
@@ -163,6 +165,7 @@ CLICK_EFFECT_IMG = "click_effect"
 COLLECT_EFFECT_IMG = "collect_effect"
 GAME_DETAILS_IMG = "game_details"
 CLEAR_PARTICLE_IMAGES = "clear_particles"
+TRAILBLAZER_BG_IMG = "background"
 
 TITLE_START_SE = "title_start"
 MODE_SCROLL_SE = "mode_scroll"
@@ -386,3 +389,13 @@ class Resources:
     @property
     def category_all_loaded(self) -> bool:
         return len(resource_members[self.loading_category]) == self.loading_iterator
+    
+    def show_loading_bar(self, display: pg.Surface):
+        self.start_load()
+        tmp_font = pg.font.Font(None, 30)
+        while self.loading:
+            display.fill(util.BLACK)
+            pg.draw.rect(display, util.WHITE, [150, 350, 600, 50], 2)
+            pg.draw.rect(display, util.GREEN, [155, 355, 590 / 100 * self.update(), 40])
+            display.blit(tmp_font.render(self.loading_category.name.lower(), True, util.WHITE), [150, 320])
+            pg.display.update()

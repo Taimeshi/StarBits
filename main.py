@@ -49,14 +49,7 @@ def main():
     with open(os.path.join(PROJ_PATH, "config.json"), "r", encoding="utf-8_sig") as j:
         config: dict = json.load(j)
     rs = Resources(config)
-    rs.start_load()
-    tmp_font = pg.font.Font(None, 30)
-    while rs.loading:
-        sc.fill(util.BLACK)
-        pg.draw.rect(sc, util.WHITE, [150, 350, 600, 50], 2)
-        pg.draw.rect(sc, util.GREEN, [155, 355, 590 / 100 * rs.update(), 40])
-        sc.blit(tmp_font.render(rs.loading_category.name.lower(), True, util.WHITE), [150, 320])
-        pg.display.update()
+    rs.show_loading_bar(sc)
     
     setting_data: Setting = Setting(config, rs)
     mode_select_sf = pg.surface.Surface((900, 700), pg.SRCALPHA)
