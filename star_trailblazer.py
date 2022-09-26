@@ -22,7 +22,7 @@ def main():
     # 変数
     plots: list[PlotData] = []
     longs: list[LongData] = []
-    long_start_temp: LongStartData | None = None
+    long_start_tmp: LongStartData | None = None
     speed_changes: list[SpeedChangeData] = []
     scroll = 0
     scroll_goal = 0
@@ -352,6 +352,22 @@ def main():
         
         if dragging_plot:
             selecting_plot.move_plot(*calc_note_pos(), splitting_box.value)
+        
+        if mouse.just_pressed(2):
+            column, int_measure, beat = calc_note_pos()
+            if selecting_type != NoteType.LONG:
+                plots.append(PlotData(selecting_type, column, int_measure, beat, splitting_box.value))
+            else:
+                if long_start_tmp:
+                    long_end_tmp = [long_start_tmp[0], int_measure, splitting_box.value, beat]
+                    if long_start_tmp[1] + long_start_tmp[3] / long_start_tmp[2] > \
+                            long_end_tmp[1] + long_end_tmp[3] / long_end_tmp[2]:
+                        long_start_tmp, long_end_tmp = long_end_tmp, long_start_tmp
+                    longs.append(LongData(long_start_tmp[0], [long_start_tmp[1], long_end_tmp[1]],
+                                          [long_start_tmp[3], long_end_tmp[3]], [long_start_tmp[2], long_end_tmp[2]]))
+                    long_start_tmp = None
+                else:
+                    long_start_tmp = [column, int_measure, splitting_box.value, beat]
         
         # 右のツールバー
         toolbar_cmd = [load_from_snp, save, save_as]
