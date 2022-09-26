@@ -18,3 +18,14 @@ class Mouse:
     
     def just_pressed(self, num: int):
         return bool(self.pressed[num] and not self.pressed_past[num])
+    
+    def pressing(self, num: int):
+        return self.pressed[num]
+    
+    @property
+    def x(self):
+        return self.pos[0]
+    
+    @property
+    def y(self):
+        return self.pos[1]

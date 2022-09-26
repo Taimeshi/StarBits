@@ -1,4 +1,5 @@
 from game_enums import *
+import util
 
 
 class PlotData:
@@ -9,6 +10,18 @@ class PlotData:
         self.measure = measure
         self.beat = beat
         self.splitting = splitting
+        self.selecting: bool = False
+    
+    def move_plot(self, column: int, measure: int, beat: int, splitting: int):
+        self.column = column
+        self.measure = measure
+        self.beat = beat
+        self.splitting = splitting
+    
+    def mouse_on_plots(self, mouse: util.Mouse, scroll: int, pixel_per_measure: int) -> bool:
+        return mouse.in_rect(250 + 50 + self.column * 100 - 50,
+                             610 + scroll - (self.measure_as_float * pixel_per_measure) - 20,
+                             100, 40)
     
     @property
     def measure_as_float(self) -> float:
@@ -20,6 +33,11 @@ class LongPointData(PlotData):
     def __init__(self, column: int, measure: int, beat: int, splitting: int, is_end: bool):
         super().__init__(NoteType.LONG, column, measure, beat, splitting)
         self.is_end = int(is_end)
+    
+    def move_plot(self, _, measure: int, beat: int, splitting: int):
+        self.measure = measure
+        self.beat = beat
+        self.splitting = splitting
 
 
 class LongData:
@@ -50,3 +68,7 @@ class SpeedChangeData:
         self.measure = measure
         self.beat = beat
         self.splitting = splitting
+
+    @property
+    def measure_as_float(self) -> float:
+        return self.measure + self.beat / self.splitting

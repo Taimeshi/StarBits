@@ -64,70 +64,6 @@ class ResourceCategory(Enum):
             return None
 
 
-resource_members = {ResourceCategory.GRAPHICS: [
-    
-    [TITLE_FILENAME, "logo"],
-    [TITLE_FILENAME, "tap_to_start"],
-    [TITLE_FILENAME, "tiny_star"],
-    [TITLE_FILENAME, "title_tri"],
-    [TITLE_FILENAME, "setting_plate"],
-    [SELECT_FILENAME, "select_background"],
-    [SELECT_FILENAME, "song_select_plate"],
-    [SELECT_FILENAME, "song_select_plate_light"],
-    [SELECT_FILENAME, "title_underbar"],
-    [SELECT_FILENAME, "auto_icon"],
-    [SELECT_FILENAME, "dif_base"],
-    [SELECT_FILENAME, "note_speed_button"],
-    [SELECT_FILENAME, "note_speed_button_pressed"],
-    [SELECT_FILENAME, "option"],
-    [SELECT_FILENAME, "change_scene"],
-    [SELECT_FILENAME, "change_scene2"],
-    [GAME_FILENAME, "game_background"],
-    [GAME_FILENAME, "game_background_base"],
-    [GAME_FILENAME, "miss_gradation"],
-    [GAME_FILENAME, "auto_judge"],
-    [GAME_FILENAME, "gauge"],
-    [GAME_FILENAME, "gauge_full"],
-    [GAME_FILENAME, "gauge_frame"],
-    [GAME_FILENAME, "judge_bar"],
-    [GAME_FILENAME, "all_perfect"],
-    [GAME_FILENAME, "full_combo"],
-    [GAME_FILENAME, "level_clear"],
-    [GAME_FILENAME, "level_failed"],
-    [GAME_FILENAME, "combo"],
-    [GAME_FILENAME, "easy_lane_disable"],
-    [GAME_FILENAME, "tap_particles"],
-    [GAME_FILENAME, "tap_particle2"],
-    [GAME_FILENAME, "reload"],
-    [GAME_FILENAME, "return"],
-    [GAME_FILENAME, "arrow"],
-    [GAME_FILENAME, "click_effect"],
-    [GAME_FILENAME, "collect_effect"],
-    [GAME_FILENAME, "game_details"],
-    [TRAILBLAZER_FILENAME, "background"],
-    [TRAILBLAZER_FILENAME, "toolbar_highlight"],
-    [TRAILBLAZER_FILENAME, "menu_highlight"]
-
-], ResourceCategory.SE: [
-    "title_start", "mode_scroll", "click", "tap_perf", "tap_good", "fuzzy", "extap", "space",
-    "cursor", "open_pause_menu", "close_pause_menu", "song_selected", "count_number", "rank",
-    "clear", "failed"
-], ResourceCategory.BGM_PATH: ["result", "title"],
-    ResourceCategory.FONTS: [
-        ["ARIALUNI.TTF", 15, "arial_tiny"],  # 判定バー
-        ["ARIALUNI.TTF", 20, "arial_tiny2"],  # エディターのコントロールの文字
-        ["ARIALUNI.TTF", 30, "arial_small"],  # オプション・判定カウント・スコア
-        ["ARIALUNI.TTF", 35, "arial_small2"],  # コントロールの中の文字
-        ["ARIALUNI.TTF", 45, "arial_regular"],  # 設定画面
-        ["ARIALUNI.TTF", 200, "arial_huge"],  # カウントダウン
-        ["Molot.otf", 16, "molot_tiny"],  # 曲詳細の文字(小)
-        ["Molot.otf", 20, "molot_small1"],  # 曲詳細の文字(大)
-        ["Molot.otf", 30, "molot_small2"],  # 曲選択場面のレベルの文字
-        ["Molot.otf", 50, "molot_regular"],  # 曲選択場面のレベルの文字(中央のやつ)
-        ["Molot.otf", 80, "molot_big"],  # コンボ・リザルト画面のスコア
-    ]
-}
-
 LOGO_IMG = "logo"
 TAP_TO_START_IMG = "tap_to_start"
 TINY_STAR_IMG = "tiny_star"
@@ -171,6 +107,8 @@ CLEAR_PARTICLE_IMAGES = "clear_particles"
 TRAILBLAZER_BG_IMG = "background"
 TOOLBAR_HIGHLIGHT_IMG = "toolbar_highlight"
 MENU_HIGHLIGHT_IMG = "menu_highlight"
+PLOT_FOCUSING_HIGHLIGHT_IMG = "plot_focusing_highlight"
+PLOT_SELECTING_HIGHLIGHT_IMG = "plot_selecting_highlight"
 
 TITLE_START_SE = "title_start"
 MODE_SCROLL_SE = "mode_scroll"
@@ -218,6 +156,72 @@ LF_SMALL_IMG = "lf_small_img"
 RANK_IMAGES = "rank_images"
 RANK_BASE_IMAGES = "rank_base_images"
 RANK_PATTERN_IMAGES = "rank_pattern_images"
+
+resource_members = {ResourceCategory.GRAPHICS: [
+    
+    [TITLE_FILENAME, LOGO_IMG],
+    [TITLE_FILENAME, TAP_TO_START_IMG],
+    [TITLE_FILENAME, TINY_STAR_IMG],
+    [TITLE_FILENAME, TITLE_TRI_IMG],
+    [TITLE_FILENAME, SETTING_PLATE_IMG],
+    [SELECT_FILENAME, SELECT_BACKGROUND_IMG],
+    [SELECT_FILENAME, SONG_SELECT_PLATE_IMG],
+    [SELECT_FILENAME, SONG_SELECT_PLATE_LIGHT_IMG],
+    [SELECT_FILENAME, TITLE_UNDERBAR_IMG],
+    [SELECT_FILENAME, AUTO_ICON_IMG],
+    [SELECT_FILENAME, DIF_BASE_IMG],
+    [SELECT_FILENAME, NOTE_SPEED_BTN_IMG],
+    [SELECT_FILENAME, NOTE_SPEED_BTN_PRESSED_IMG],
+    [SELECT_FILENAME, OPTION_IMG],
+    [SELECT_FILENAME, CHANGE_SCENE_IMG],
+    [SELECT_FILENAME, CHANGE_SCENE2_IMG],
+    [GAME_FILENAME, GAME_BACKGROUND_IMG],
+    [GAME_FILENAME, GAME_BACKGROUND_BASE_IMG],
+    [GAME_FILENAME, MISS_GRADATION_IMG],
+    [GAME_FILENAME, AUTO_JUDGE],
+    [GAME_FILENAME, GAUGE_IMG],
+    [GAME_FILENAME, GAUGE_FULL_IMG],
+    [GAME_FILENAME, GAUGE_FRAME_IMG],
+    [GAME_FILENAME, JUDGE_BAR_IMG],
+    [GAME_FILENAME, ALL_PERFECT_IMG],
+    [GAME_FILENAME, FULL_COMBO_IMG],
+    [GAME_FILENAME, LEVEL_CLEAR_IMG],
+    [GAME_FILENAME, LEVEL_FAILED_IMG],
+    [GAME_FILENAME, COMBO_IMG],
+    [GAME_FILENAME, EASY_LANE_DISABLE_IMG],
+    [GAME_FILENAME, TAP_PARTICLES_IMG],
+    [GAME_FILENAME, TAP_PARTICLE2_IMG],
+    [GAME_FILENAME, RELOAD_IMG],
+    [GAME_FILENAME, RETURN_IMG],
+    [GAME_FILENAME, ARROW_IMG],
+    [GAME_FILENAME, CLICK_EFFECT_IMG],
+    [GAME_FILENAME, COLLECT_EFFECT_IMG],
+    [GAME_FILENAME, GAME_DETAILS_IMG],
+    [TRAILBLAZER_FILENAME, TRAILBLAZER_BG_IMG],
+    [TRAILBLAZER_FILENAME, TOOLBAR_HIGHLIGHT_IMG],
+    [TRAILBLAZER_FILENAME, MENU_HIGHLIGHT_IMG],
+    [TRAILBLAZER_FILENAME, PLOT_FOCUSING_HIGHLIGHT_IMG],
+    [TRAILBLAZER_FILENAME, PLOT_SELECTING_HIGHLIGHT_IMG]
+
+], ResourceCategory.SE: [
+    "title_start", "mode_scroll", "click", "tap_perf", "tap_good", "fuzzy", "extap", "space",
+    "cursor", "open_pause_menu", "close_pause_menu", "song_selected", "count_number", "rank",
+    "clear", "failed"
+], ResourceCategory.BGM_PATH: ["result", "title"],
+    ResourceCategory.FONTS: [
+        ["ARIALUNI.TTF", 15, "arial_tiny"],  # 判定バー
+        ["ARIALUNI.TTF", 20, "arial_tiny2"],  # エディターのコントロールの文字
+        ["ARIALUNI.TTF", 30, "arial_small"],  # オプション・判定カウント・スコア
+        ["ARIALUNI.TTF", 35, "arial_small2"],  # コントロールの中の文字
+        ["ARIALUNI.TTF", 45, "arial_regular"],  # 設定画面
+        ["ARIALUNI.TTF", 200, "arial_huge"],  # カウントダウン
+        ["Molot.otf", 16, "molot_tiny"],  # 曲詳細の文字(小)
+        ["Molot.otf", 20, "molot_small1"],  # 曲詳細の文字(大)
+        ["Molot.otf", 30, "molot_small2"],  # 曲選択場面のレベルの文字
+        ["Molot.otf", 50, "molot_regular"],  # 曲選択場面のレベルの文字(中央のやつ)
+        ["Molot.otf", 80, "molot_big"],  # コンボ・リザルト画面のスコア
+    ]
+}
 
 
 class Resources:
