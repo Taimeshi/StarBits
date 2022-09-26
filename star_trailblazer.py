@@ -395,7 +395,7 @@ def main():
 
 
 if __name__ == '__main__':
-    pg.display.set_caption("star trailblazer")
+    pg.display.set_caption("Star Trailblazer")
     sc = pg.display.set_mode((900, 700), pg.SRCALPHA)
     from data_loader import *
     
