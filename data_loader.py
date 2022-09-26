@@ -104,7 +104,8 @@ resource_members = {ResourceCategory.GRAPHICS: [
     [GAME_FILENAME, "click_effect"],
     [GAME_FILENAME, "collect_effect"],
     [GAME_FILENAME, "game_details"],
-    [TRAILBLAZER_FILENAME, "background"]
+    [TRAILBLAZER_FILENAME, "background"],
+    [TRAILBLAZER_FILENAME, "toolbar_highlight"]
 
 ], ResourceCategory.SE: [
     "title_start", "mode_scroll", "click", "tap_perf", "tap_good", "fuzzy", "extap", "space",
@@ -166,6 +167,7 @@ COLLECT_EFFECT_IMG = "collect_effect"
 GAME_DETAILS_IMG = "game_details"
 CLEAR_PARTICLE_IMAGES = "clear_particles"
 TRAILBLAZER_BG_IMG = "background"
+TOOLBAR_HIGHLIGHT_IMG = "toolbar_highlight"
 
 TITLE_START_SE = "title_start"
 MODE_SCROLL_SE = "mode_scroll"

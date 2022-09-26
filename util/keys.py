@@ -66,4 +66,12 @@ class Keys:
     @property
     def just_left(self):
         return self.just_pressed(pg.K_LEFT) or self.just_pressed(pg.K_d)
+
+    @property
+    def shift_clicking(self):
+        return self.pressing(pg.K_LSHIFT) or self.pressing(pg.K_RSHIFT)
+
+    @property
+    def ctrl_clicking(self):
+        return self.pressing(pg.K_LCTRL) or self.pressing(pg.K_RCTRL)
     
