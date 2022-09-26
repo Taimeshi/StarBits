@@ -4,15 +4,12 @@ from tkinter import filedialog
 import pygame as pg
 import tkinter as tk
 import json
-from tkinter import *
-import os
 import util
 from trailblazer_plots import *
 
 
 def main():
     # 初期化
-    pg.display.set_caption("starbits notes designer")
     cl = pg.time.Clock()
     with open(os.path.join(PROJ_PATH, "config.json"), "r", encoding="utf-8_sig") as j:
         config: dict = json.load(j)
@@ -31,6 +28,16 @@ def main():
     scroll_goal = 0
     pixel_per_measure = 600
     file_path = ""
+    selecting_type = NoteType.TAP
+    
+    beat_box = util.TextBox(rs)
+    ex_speed_box = util.TextBox(rs)
+    beat_box.init_value(8)
+    ex_speed_box.init_value(2.0)
+    beat_box.rect = [97, 463, 123, 25]
+    ex_speed_box.rect = [144, 512, 76, 26]
+    beat_box.font = rs.font(ARIAL_TINY2_FONT)
+    ex_speed_box.font = rs.font(ARIAL_TINY2_FONT)
     
     def load_from_snp():  # 読み込み
         nonlocal plots, longs
@@ -138,7 +145,8 @@ def main():
     
     def save_as():  # 名前をつけて保存
         path = filedialog.asksaveasfilename(
-            defaultextension=".snp", title="譜面データを保存", filetypes=[("Starbit Note Plots", ".snp")])
+            defaultextension=".snp", title="譜面データを保存",
+            initialfile="plots.snp", filetypes=[("Starbit Note Plots", ".snp")])
         if not path or not os.path.exists(path[0]):
             return
         save(path)
@@ -169,7 +177,13 @@ def main():
         
         mouse.update()
         keys.update()
+        beat_box.update(keys, mouse)
+        ex_speed_box.update(keys, mouse)
+        
         sc.blit(rs.graphic(TRAILBLAZER_BG_IMG), [0, 0])
+        
+        beat_box.render(sc)
+        ex_speed_box.render(sc)
         
         # スクロール処理
         if scroll > scroll_goal:
@@ -225,6 +239,19 @@ def main():
                 sc.blit(rs.graphic(TOOLBAR_HIGHLIGHT_IMG), [850, ti_i*50])
                 if mouse.just_pressed(0):
                     toolbar_cmd[ti_i]()
+        
+        # 左のメニュー
+        note_types = [NoteType.TAP, NoteType.EX_TAP, NoteType.LONG, NoteType.FUZZY]
+        for nt_i in range(4):
+            note_img = rs.graphic(NOTE_IMAGES)[note_types[nt_i]]
+            if note_types[nt_i] == selecting_type:
+                note_img.set_alpha(255)
+                sc.blit(rs.graphic(MENU_HIGHLIGHT_IMG), [25, 50 + 100 * nt_i + 3])
+            else:
+                note_img.set_alpha(100)
+            sc.blit(note_img, [125 - note_img.get_width()/2, 100 + 100 * nt_i - note_img.get_height()/2])
+            if mouse.in_rect(25, 50 + 100 * nt_i, 200, 100) and mouse.just_pressed(0):
+                selecting_type = note_types[nt_i]
         
         pg.display.update()
         cl.tick(60)

@@ -105,7 +105,8 @@ resource_members = {ResourceCategory.GRAPHICS: [
     [GAME_FILENAME, "collect_effect"],
     [GAME_FILENAME, "game_details"],
     [TRAILBLAZER_FILENAME, "background"],
-    [TRAILBLAZER_FILENAME, "toolbar_highlight"]
+    [TRAILBLAZER_FILENAME, "toolbar_highlight"],
+    [TRAILBLAZER_FILENAME, "menu_highlight"]
 
 ], ResourceCategory.SE: [
     "title_start", "mode_scroll", "click", "tap_perf", "tap_good", "fuzzy", "extap", "space",
@@ -114,6 +115,7 @@ resource_members = {ResourceCategory.GRAPHICS: [
 ], ResourceCategory.BGM_PATH: ["result", "title"],
     ResourceCategory.FONTS: [
         ["ARIALUNI.TTF", 15, "arial_tiny"],  # 判定バー
+        ["ARIALUNI.TTF", 20, "arial_tiny2"],  # エディターのコントロールの文字
         ["ARIALUNI.TTF", 30, "arial_small"],  # オプション・判定カウント・スコア
         ["ARIALUNI.TTF", 35, "arial_small2"],  # コントロールの中の文字
         ["ARIALUNI.TTF", 45, "arial_regular"],  # 設定画面
@@ -168,6 +170,7 @@ GAME_DETAILS_IMG = "game_details"
 CLEAR_PARTICLE_IMAGES = "clear_particles"
 TRAILBLAZER_BG_IMG = "background"
 TOOLBAR_HIGHLIGHT_IMG = "toolbar_highlight"
+MENU_HIGHLIGHT_IMG = "menu_highlight"
 
 TITLE_START_SE = "title_start"
 MODE_SCROLL_SE = "mode_scroll"
@@ -190,6 +193,7 @@ RESULT_BGM = "result"
 TITLE_BGM = "title"
 
 ARIAL_TINY_FONT = "arial_tiny"
+ARIAL_TINY2_FONT = "arial_tiny2"
 ARIAL_SMALL_FONT = "arial_small"
 ARIAL_SMALL2_FONT = "arial_small2"
 ARIAL_REGULAR_FONT = "arial_regular"
