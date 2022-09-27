@@ -51,16 +51,6 @@ class LongData:
         return [self.start, self.end]
 
 
-class LongStartData(PlotData):
-    
-    def __init__(self, column: int, measure: int, beat: int, splitting: int):
-        super().__init__(NoteType.LONG, column, measure, beat, splitting)
-    
-    def connect_long(self, end_measure: int, end_beat: int, end_splitting: int) -> LongData:
-        return LongData(self.column, [self.measure, end_measure], [self.beat, end_beat],
-                        [self.splitting, end_splitting])
-
-
 class SpeedChangeData:
     
     def __init__(self, speed: float, measure: int, beat: int, splitting: int):

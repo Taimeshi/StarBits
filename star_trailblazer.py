@@ -22,7 +22,7 @@ def main():
     # 変数
     plots: list[PlotData] = []
     longs: list[LongData] = []
-    long_start_tmp: LongStartData | None = None
+    long_start_tmp: list | None = None
     speed_changes: list[SpeedChangeData] = []
     scroll = 0
     scroll_goal = 0
@@ -233,7 +233,7 @@ def main():
         # 小節線の描画
         for m_i in range(10000):
             bar_y = 610 + scroll - m_i * (pixel_per_measure / splitting_box.value)
-            if -5 < bar_y < 610 + 5:
+            if -5 < bar_y < 700 + 5:
                 pg.draw.line(sc, util.WHITE, [260, bar_y], [840, bar_y])
                 if m_i % splitting_box.value == 0:
                     pg.draw.line(sc, util.YELLOW, [260, bar_y], [840, bar_y], width=4)
