@@ -1,7 +1,7 @@
 ﻿{
     "general": {
         "debug": false,
-        "texture": "Pop"
+        "texture": "Default"
     },
     "game": {
         "note_speed": 8,

@@ -17,6 +17,7 @@ SWP_NO_OWNERZORDER = 0x0200
 SWP_NO_SIZE = 0x0001
 
 
+# ウィンドウ振動関連
 class Rect(Structure):
     _fields_ = [
         ("left", wintypes.LONG),
@@ -38,6 +39,7 @@ def move_window_abs(x, y, hwnd=None):
     if hwnd is None:
         hwnd = pygame.display.get_wm_info()["window"]
     windll.user32.SetWindowPos(hwnd, 0, x, y, 0, 0, SWP_NO_SIZE | SWP_NO_OWNERZORDER)
+# ウィンドウ振動関連　おわり
 
 
 def main():
@@ -52,6 +54,8 @@ def main():
     rs.show_loading_bar(sc)
     
     setting_data: Setting = Setting(config, rs)
+    
+    # 画面初期化
     mode_select_sf = pg.surface.Surface((900, 700), pg.SRCALPHA)
     selecting_info_sf = pg.surface.Surface((900, 700), pg.SRCALPHA)
     notes_sf = pg.surface.Surface((900, 700), pg.SRCALPHA)
@@ -182,8 +186,8 @@ def main():
             json.dump(setting_data.get_as_dict(), jw, indent=4, ensure_ascii=False)
         with open(os.path.join(PROJ_PATH, "config.json"), "r", encoding="utf-8_sig") as jr:
             config = json.load(jr)
+        rs.change_texture(sc)
         setting_data = Setting(config, rs)
-        rs.show_loading_bar(sc)
     
     while True:
         
@@ -383,7 +387,7 @@ def main():
                 dif_scroll += 10
             
             # ノーツスピードの簡易変更
-            selecting_info_sf.blit(rs.graphic(NOTE_SPEED_BTN_IMG), [500 - 6, 20 - 5])
+            selecting_info_sf.blit(rs.graphic(SPEED_MENU_IMG), [580, 20])
             speed_selecting = 3
             if config["game"]["note_speed"] == 2:
                 speed_selecting = 0
@@ -391,14 +395,19 @@ def main():
                 speed_selecting = 1
             if config["game"]["note_speed"] == 8:
                 speed_selecting = 2
-            selecting_info_sf.blit(rs.graphic(NOTE_SPEED_BTN_PRESSED_IMG),
-                                   [500 + 75 * speed_selecting, 20], [75 * speed_selecting, 0, 75, 60])
-            for s_i in range(3):
-                if mouse.in_rect(500 + 75 * s_i, 20, 75, 60) and mouse.just_pressed(0):
-                    config["game"]["note_speed"] = [2, 5, 8][s_i]
-                    with open(os.path.join(PROJ_PATH, "config.json"), "w", encoding="utf-8_sig") as f:
-                        json.dump(config, f, indent=4)
-                    rs.se(CURSOR_SE).play()
+            selecting_info_sf.blit(rs.graphic(SPEED_ICONS_IMG),
+                                   [580 + 79, 20], [129 * speed_selecting, 0, 129, 68])
+            
+            if mouse.in_rect(580, 20, 208, 68) and mouse.just_pressed(0):
+                if speed_selecting != 3:
+                    config["game"]["note_speed"] = [2, 5, 8][(speed_selecting + 1) % 3]
+                else:
+                    # 一番近いやつにする
+                    tmp = [[t, abs(t - config["game"]["note_speed"])] for t in [2, 5, 8]]
+                    tmp2 = sorted(tmp, key=lambda x: x[1])
+                    config["game"]["note_speed"] = tmp2[0][0]
+                with open(os.path.join(PROJ_PATH, "config.json"), "w", encoding="utf-8_sig") as f:
+                    json.dump(config, f, indent=4)
             
             # 決定
             if keys.just_decided and not song_boxes.song_selected:

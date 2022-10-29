@@ -77,8 +77,8 @@ SONG_SELECT_PLATE_LIGHT_IMG = "song_select_plate_light"
 TITLE_UNDERBAR_IMG = "title_underbar"
 AUTO_ICON_IMG = "auto_icon"
 DIF_BASE_IMG = "dif_base"
-NOTE_SPEED_BTN_IMG = "note_speed_button"
-NOTE_SPEED_BTN_PRESSED_IMG = "note_speed_button_pressed"
+SPEED_MENU_IMG = "speed_menu"
+SPEED_ICONS_IMG = "speed_icons"
 OPTION_IMG = "option"
 CHANGE_SCENE_IMG = "change_scene"
 CHANGE_SCENE2_IMG = "change_scene2"
@@ -173,8 +173,8 @@ resource_members = {ResourceCategory.GRAPHICS: [
     [SELECT_FILENAME, TITLE_UNDERBAR_IMG],
     [SELECT_FILENAME, AUTO_ICON_IMG],
     [SELECT_FILENAME, DIF_BASE_IMG],
-    [SELECT_FILENAME, NOTE_SPEED_BTN_IMG],
-    [SELECT_FILENAME, NOTE_SPEED_BTN_PRESSED_IMG],
+    [SELECT_FILENAME, SPEED_MENU_IMG],
+    [SELECT_FILENAME, SPEED_ICONS_IMG],
     [SELECT_FILENAME, OPTION_IMG],
     [SELECT_FILENAME, CHANGE_SCENE_IMG],
     [SELECT_FILENAME, CHANGE_SCENE2_IMG],
@@ -233,7 +233,6 @@ class Resources:
     def __init__(self, config: dict):
         self.proj_config = config
         self.resources: dict = {}
-        self.new_resources: dict = {}
         self._texture_name = config["general"]["texture"]
         if not os.path.isdir(os.path.join(RESOURCES_PATH, self._texture_name)):
             self._texture_name = "Default"
@@ -253,8 +252,8 @@ class Resources:
         """
         テクスチャの読み込みを開始します。
         """
-        self.new_resources = {ResourceCategory.GRAPHICS: {}, ResourceCategory.SE: {}, ResourceCategory.BGM_PATH: {},
-                              ResourceCategory.FONTS: {}}
+        self.resources = {ResourceCategory.GRAPHICS: {}, ResourceCategory.SE: {}, ResourceCategory.BGM_PATH: {},
+                          ResourceCategory.FONTS: {}}
         self.loading = True
         self.loading_category: ResourceCategory = ResourceCategory.GRAPHICS
         self.loading_iterator = 0
@@ -279,19 +278,19 @@ class Resources:
         progressing_member = resource_members[self.loading_category][self.loading_iterator]
         if self.loading_category == ResourceCategory.GRAPHICS:
             folder_tmp = os.path.join(self._GRAPHICS_PATH, progressing_member[0])
-            self.new_resources[ResourceCategory.GRAPHICS][progressing_member[1]] = \
+            self.resources[ResourceCategory.GRAPHICS][progressing_member[1]] = \
                 pg.image.load(os.path.join(folder_tmp, progressing_member[1]) + ".png").convert_alpha()
         
         elif self.loading_category == ResourceCategory.SE:
-            self.new_resources[ResourceCategory.SE][progressing_member] = \
+            self.resources[ResourceCategory.SE][progressing_member] = \
                 pg.mixer.Sound(os.path.join(self._SE_PATH, progressing_member) + ".mp3")
         
         elif self.loading_category == ResourceCategory.BGM_PATH:
-            self.new_resources[ResourceCategory.BGM_PATH][progressing_member] = \
+            self.resources[ResourceCategory.BGM_PATH][progressing_member] = \
                 os.path.join(self._BGM_PATH, progressing_member) + ".mp3"
         
         else:
-            self.new_resources[ResourceCategory.FONTS][progressing_member[2]] = \
+            self.resources[ResourceCategory.FONTS][progressing_member[2]] = \
                 pg.font.Font(os.path.join(self._FONT_PATH, progressing_member[0]), progressing_member[1])
         progressive = self.loading_iterator / (len(resource_members[self.loading_category]) - 1) * 100
         
@@ -304,17 +303,16 @@ class Resources:
                 # その他の画像
                 self.load_others()
                 self.loading = False
-                self.resources = self.new_resources
         
         return progressive
     
-    def change_texture(self, texture_name: str):
+    def change_texture(self, display: pg.Surface):
         """
         テクスチャを変更します。
         テクスチャをすべて読み込み直します。
-        :param texture_name: テクスチャの名前
+        :param display: ディスプレイのSurface
         """
-        self._texture_name = texture_name
+        self._texture_name = self.proj_config["general"]["texture"]
         if not os.path.isdir(os.path.join(RESOURCES_PATH, self._texture_name)):
             self._texture_name = "Default"
         self._TEXTURE_PATH = os.path.join(RESOURCES_PATH, self._texture_name)
@@ -323,7 +321,17 @@ class Resources:
         self._BGM_PATH = os.path.join(self._TEXTURE_PATH, "bgm")
         with open(os.path.join(self._TEXTURE_PATH, "config.json"), "r", encoding="utf-8_sig") as j:
             self.rs_config: dict = json.load(j)
+        self.show_loading_bar(display)
+    
+    def show_loading_bar(self, display: pg.Surface):
         self.start_load()
+        tmp_font = pg.font.Font(None, 30)
+        while self.loading:
+            display.fill(util.BLACK)
+            pg.draw.rect(display, util.WHITE, [150, 350, 600, 50], 2)
+            pg.draw.rect(display, util.GREEN, [155, 355, 590 / 100 * self.update(), 40])
+            display.blit(tmp_font.render(self.loading_category.name.lower(), True, util.WHITE), [150, 320])
+            pg.display.update()
     
     def graphic(self, name: str):
         return self.resources[ResourceCategory.GRAPHICS][name]
@@ -341,79 +349,69 @@ class Resources:
         """
         その他の画像を読み込みます
         """
-        selecting_blur_bg_tmp = blur_surface(self.new_resources[ResourceCategory.GRAPHICS][SELECT_BACKGROUND_IMG], 2)
+        selecting_blur_bg_tmp = blur_surface(self.resources[ResourceCategory.GRAPHICS][SELECT_BACKGROUND_IMG], 2)
         grad_tmp = pg.surface.Surface((900, 700), pg.SRCALPHA)
         grad_tmp.fill((0, 0, 0, 50))
         selecting_blur_bg_tmp.blit(grad_tmp, [0, 0])
-        self.new_resources[ResourceCategory.GRAPHICS]["selecting_blur_bg"] = selecting_blur_bg_tmp
-        self.new_resources[ResourceCategory.GRAPHICS]["result_backgrounds"] = {
+        self.resources[ResourceCategory.GRAPHICS]["selecting_blur_bg"] = selecting_blur_bg_tmp
+        self.resources[ResourceCategory.GRAPHICS]["result_backgrounds"] = {
             Difficulty.EASY: pg.image.load(self._img_path(RESULT_FILENAME, "result_bg_easy")).convert_alpha(),
             Difficulty.HARD: pg.image.load(self._img_path(RESULT_FILENAME, "result_bg_hard")).convert_alpha(),
             Difficulty.IMP: pg.image.load(self._img_path(RESULT_FILENAME, "result_bg_imp")).convert_alpha()}
-        self.new_resources[ResourceCategory.GRAPHICS]["game_mode_images"] = {
+        self.resources[ResourceCategory.GRAPHICS]["game_mode_images"] = {
             GameMode.SONG_SELECT: pg.image.load(self._img_path(TITLE_FILENAME, "song_select")).convert_alpha(),
             GameMode.CHALLENGE: pg.image.load(self._img_path(TITLE_FILENAME, "challenge")).convert_alpha(),
             GameMode.SETTING: pg.image.load(self._img_path(TITLE_FILENAME, "setting")).convert_alpha(),
             GameMode.EXIT: pg.image.load(self._img_path(TITLE_FILENAME, "exit")).convert_alpha()}
-        self.new_resources[ResourceCategory.GRAPHICS]["box_images"] = {
+        self.resources[ResourceCategory.GRAPHICS]["box_images"] = {
             Difficulty.EASY: pg.image.load(self._img_path(SELECT_FILENAME, "song_box_easy")).convert_alpha(),
             Difficulty.HARD: pg.image.load(self._img_path(SELECT_FILENAME, "song_box_hard")).convert_alpha(),
             Difficulty.IMP: pg.image.load(self._img_path(SELECT_FILENAME, "song_box_imp")).convert_alpha()}
-        self.new_resources[ResourceCategory.GRAPHICS]["difficulty_images"] = {
+        self.resources[ResourceCategory.GRAPHICS]["difficulty_images"] = {
             Difficulty.EASY: pg.image.load(self._img_path(SELECT_FILENAME, "dif_easy")).convert_alpha(),
             Difficulty.HARD: pg.image.load(self._img_path(SELECT_FILENAME, "dif_hard")).convert_alpha(),
             Difficulty.IMP: pg.image.load(self._img_path(SELECT_FILENAME, "dif_imp")).convert_alpha()}
         
-        self.new_resources[ResourceCategory.GRAPHICS]["note_images"] = {
+        self.resources[ResourceCategory.GRAPHICS]["note_images"] = {
             NoteType.TAP: pg.image.load(self._img_path(GAME_FILENAME, "tap")).convert_alpha(),
             NoteType.EX_TAP: pg.image.load(self._img_path(GAME_FILENAME, "ex_tap")).convert_alpha(),
             NoteType.FUZZY: pg.image.load(self._img_path(GAME_FILENAME, "fuzzy")).convert_alpha(),
             NoteType.LONG: pg.image.load(self._img_path(GAME_FILENAME, "long_tap")).convert_alpha()}
         
-        self.new_resources[ResourceCategory.GRAPHICS]["long_textures"] = [
+        self.resources[ResourceCategory.GRAPHICS]["long_textures"] = [
             pg.image.load(self._img_path(GAME_FILENAME, "long_texture")).convert_alpha(),
             pg.image.load(self._img_path(GAME_FILENAME, "long_texture_pressing")).convert_alpha(),
             pg.image.load(self._img_path(GAME_FILENAME, "long_texture_missed")).convert_alpha()
         ]
         
-        self.new_resources[ResourceCategory.GRAPHICS]["judge_images"] = {
+        self.resources[ResourceCategory.GRAPHICS]["judge_images"] = {
             Judge.PERFECT: pg.image.load(self._img_path(GAME_FILENAME, "perfect")).convert_alpha(),
             Judge.GOOD: pg.image.load(self._img_path(GAME_FILENAME, "good")).convert_alpha(),
             Judge.MISS: pg.image.load(self._img_path(GAME_FILENAME, "miss")).convert_alpha()}
         
-        self.new_resources[ResourceCategory.GRAPHICS]["ap_small_img"] = \
-            pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][ALL_PERFECT_IMG], 0, 0.5)
-        self.new_resources[ResourceCategory.GRAPHICS]["fc_small_img"] = \
-            pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][FULL_COMBO_IMG], 0, 0.5)
-        self.new_resources[ResourceCategory.GRAPHICS]["lc_small_img"] = \
-            pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][LEVEL_CLEAR_IMG], 0, 0.5)
-        self.new_resources[ResourceCategory.GRAPHICS]["lf_small_img"] = \
-            pg.transform.rotozoom(self.new_resources[ResourceCategory.GRAPHICS][LEVEL_FAILED_IMG], 0, 0.5)
+        self.resources[ResourceCategory.GRAPHICS]["ap_small_img"] = \
+            pg.transform.rotozoom(self.resources[ResourceCategory.GRAPHICS][ALL_PERFECT_IMG], 0, 0.5)
+        self.resources[ResourceCategory.GRAPHICS]["fc_small_img"] = \
+            pg.transform.rotozoom(self.resources[ResourceCategory.GRAPHICS][FULL_COMBO_IMG], 0, 0.5)
+        self.resources[ResourceCategory.GRAPHICS]["lc_small_img"] = \
+            pg.transform.rotozoom(self.resources[ResourceCategory.GRAPHICS][LEVEL_CLEAR_IMG], 0, 0.5)
+        self.resources[ResourceCategory.GRAPHICS]["lf_small_img"] = \
+            pg.transform.rotozoom(self.resources[ResourceCategory.GRAPHICS][LEVEL_FAILED_IMG], 0, 0.5)
         
-        self.new_resources[ResourceCategory.GRAPHICS]["rank_images"] = \
+        self.resources[ResourceCategory.GRAPHICS]["rank_images"] = \
             [pg.image.load(self._img_path(GAME_FILENAME, f"star{r_i}")).convert_alpha() for r_i in range(6)]
-        self.new_resources[ResourceCategory.GRAPHICS]["rank_base_images"] = \
+        self.resources[ResourceCategory.GRAPHICS]["rank_base_images"] = \
             [pg.image.load(self._img_path(GAME_FILENAME, f"star_{c}")).convert_alpha() for c in ["n", "fc", "ap"]]
-        self.new_resources[ResourceCategory.GRAPHICS]["rank_pattern_images"] = \
+        self.resources[ResourceCategory.GRAPHICS]["rank_pattern_images"] = \
             [pg.image.load(self._img_path(GAME_FILENAME, f"star_pt{r_i}")).convert_alpha() for r_i in range(6)]
         
-        self.new_resources[ResourceCategory.GRAPHICS]["clear_particles"] = \
+        self.resources[ResourceCategory.GRAPHICS]["clear_particles"] = \
             [pg.surface.Surface((10, 10), pg.SRCALPHA) for _ in range(10)]
         clear_particles_base = pg.image.load(self._img_path(GAME_FILENAME, "clear_particles")).convert_alpha()
-        for cp_i, cp in enumerate(self.new_resources[ResourceCategory.GRAPHICS]["clear_particles"]):
+        for cp_i, cp in enumerate(self.resources[ResourceCategory.GRAPHICS]["clear_particles"]):
             cp.fill(util.CLEAR)
             cp.blit(clear_particles_base, [0, 0], [10 * cp_i, 0, 10, 10])
     
     @property
     def category_all_loaded(self) -> bool:
         return len(resource_members[self.loading_category]) == self.loading_iterator
-    
-    def show_loading_bar(self, display: pg.Surface):
-        self.start_load()
-        tmp_font = pg.font.Font(None, 30)
-        while self.loading:
-            display.fill(util.BLACK)
-            pg.draw.rect(display, util.WHITE, [150, 350, 600, 50], 2)
-            pg.draw.rect(display, util.GREEN, [155, 355, 590 / 100 * self.update(), 40])
-            display.blit(tmp_font.render(self.loading_category.name.lower(), True, util.WHITE), [150, 320])
-            pg.display.update()

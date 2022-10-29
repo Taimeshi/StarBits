@@ -3,6 +3,158 @@
   <component name="StickySelectionHighlights">
     <option name="editorHighlights">
       <map>
+        <entry key="$PROJECT_DIR$/data_loader.py">
+          <value>
+            <PaintGroupHighlightMap>
+              <option name="paintGroups">
+                <map>
+                  <entry key="1">
+                    <value>
+                      <EditorHighlightsForPaintGroup>
+                        <option name="highlights">
+                          <list>
+                            <HighlightOffset>
+                              <option name="start" value="539" />
+                              <option name="end" value="548" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="7614" />
+                              <option name="end" value="7623" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="8633" />
+                              <option name="end" value="8642" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="9768" />
+                              <option name="end" value="9777" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="10021" />
+                              <option name="end" value="10030" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="10256" />
+                              <option name="end" value="10265" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="10431" />
+                              <option name="end" value="10440" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="12487" />
+                              <option name="end" value="12496" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="12584" />
+                              <option name="end" value="12593" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="12681" />
+                              <option name="end" value="12690" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="12780" />
+                              <option name="end" value="12789" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="12948" />
+                              <option name="end" value="12957" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="13178" />
+                              <option name="end" value="13187" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="13273" />
+                              <option name="end" value="13282" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="13680" />
+                              <option name="end" value="13689" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="14176" />
+                              <option name="end" value="14185" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="14572" />
+                              <option name="end" value="14581" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="14969" />
+                              <option name="end" value="14978" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="15443" />
+                              <option name="end" value="15452" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="15818" />
+                              <option name="end" value="15827" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16185" />
+                              <option name="end" value="16194" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16281" />
+                              <option name="end" value="16290" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16357" />
+                              <option name="end" value="16366" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16453" />
+                              <option name="end" value="16462" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16528" />
+                              <option name="end" value="16537" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16624" />
+                              <option name="end" value="16633" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16700" />
+                              <option name="end" value="16709" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16796" />
+                              <option name="end" value="16805" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="16882" />
+                              <option name="end" value="16891" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="17060" />
+                              <option name="end" value="17069" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="17249" />
+                              <option name="end" value="17258" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="17447" />
+                              <option name="end" value="17456" />
+                            </HighlightOffset>
+                            <HighlightOffset>
+                              <option name="start" value="17732" />
+                              <option name="end" value="17741" />
+                            </HighlightOffset>
+                          </list>
+                        </option>
+                      </EditorHighlightsForPaintGroup>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </PaintGroupHighlightMap>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/judge.py">
           <value>
             <PaintGroupHighlightMap>

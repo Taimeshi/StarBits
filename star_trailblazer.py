@@ -1,5 +1,5 @@
 import math
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 
 import pygame as pg
 import tkinter as tk
@@ -87,11 +87,13 @@ def main():
                     break
     
     def save(path: str = ""):  # 保存
+        nonlocal file_path
         if not path:
             path = file_path
         if not os.path.exists(path):
             save_as()
             return
+        file_path = path
         text = []
         plots_copy = plots + sum([ln2.points_as_plot() for ln2 in longs], [])
         for m_i2 in range(1000):  # 小節の番号
@@ -148,7 +150,8 @@ def main():
         path = filedialog.asksaveasfilename(
             defaultextension=".snp", title="譜面データを保存",
             initialfile="plots.snp", filetypes=[("Starbit Note Plots", ".snp")])
-        if not path or not os.path.exists(path[0]):
+        if not path or not os.path.exists(path):
+            messagebox.showerror("保存に失敗しました", f"このパスは無効です: {path}")
             return
         save(path)
     
@@ -186,10 +189,6 @@ def main():
         for lp in sum([ln2.points_as_plot() for ln2 in longs], []):
             lp.selecting = False
         selecting_plots = []
-    
-    def get_plots_move_offset(sp_idx: int):
-        return [mouse.x - (250 + 50 + selecting_plots[sp_idx].column * 100),
-                mouse.y - (610 - scroll - selecting_plots[sp_idx].measure_as_float * pixel_per_measure)]
     
     def select_plot(plot: PlotData):
         nonlocal clicked_any_plots, dragging_plot
