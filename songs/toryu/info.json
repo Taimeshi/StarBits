@@ -1,0 +1,13 @@
+{
+  "title": "冬竜 ～Toryu～",
+  "music": "toryu.mp3",
+  "jacket": "toryu.png",
+  "snp": ["toryu_easy.snp", "toryu_hard.snp", "toryu_imp.snp"],
+  "request": "いしまつ",
+  "level": [3, 6, 10],
+  "demo": [90, 100],
+  "bpm": 110,
+  "offset": 2.25,
+  "time": 4,
+  "rank_max": [265000, 698000, 1235000]
+}

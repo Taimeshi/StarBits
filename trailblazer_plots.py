@@ -11,12 +11,13 @@ class PlotData:
         self.beat = beat
         self.splitting = splitting
         self.selecting: bool = False
+        self.selecting_offset: [int, int] = [0, 0]
     
     def move_plot(self, column: int, measure: int, beat: int, splitting: int):
-        self.column = column
-        self.measure = measure
-        self.beat = beat
-        self.splitting = splitting
+        self.column = util.range_round(column, minimum=0, maximum=5)
+        self.measure = util.range_round(measure, minimum=0)
+        self.beat = util.range_round(beat, minimum=0)
+        self.splitting = util.range_round(splitting, minimum=1)
     
     def mouse_on_plots(self, mouse: util.Mouse, scroll: int, pixel_per_measure: int) -> bool:
         return mouse.in_rect(250 + 50 + self.column * 100 - 50,

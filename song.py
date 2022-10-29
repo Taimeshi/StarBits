@@ -18,7 +18,8 @@ class Song:
     楽曲のデータを持っていたり、楽曲に関する計算を行ったりします。
     """
     
-    def __init__(self, folder_name: str, config: dict):
+    def __init__(self, folder_name: str, config: dict,
+                 jacket_frame_color: list[int, int, int] | tuple[int, int, int] | pg.Color):
         """
         :param folder_name: フォルダの名前
         :param config: ゲームの設定データ
@@ -42,7 +43,7 @@ class Song:
         jacket_tmp = pg.transform.rotozoom(self.jacket, 0, 900 / 256)
         jacket_tmp = blur_surface(jacket_tmp, radius=15)
         self.jacket_bg.blit(jacket_tmp, [0, -100])
-        pg.draw.rect(self.jacket, util.WHITE, [0, 0, 256, 256], width=4)  # ジャケットの外枠
+        pg.draw.rect(self.jacket, jacket_frame_color, [0, 0, 256, 256], width=4)  # ジャケットの外枠
         self.started: bool = False
         
         self.paused_time: float = 0  # ポーズ画面を開いていた時間

@@ -29,7 +29,7 @@ class SongBoxes:
 		self.tmr_standby = 0
 		self.tmr_to_game = 0
 		songs_path = os.listdir(os.path.join(PROJ_PATH, "songs"))
-		self.songs = [Song(p, self.proj_config) for p in songs_path]
+		self.songs = [Song(p, self.proj_config, self.rs.rs_config["song_select_text_color"]) for p in songs_path]
 		self.displaying_songs = []
 		self.update_displaying_songs()
 	
@@ -109,10 +109,12 @@ class SongBoxes:
 				               (box_pos[0] + 40, box_pos[1] + 99))
 			else:
 				continue
-			title = self.rs.font(ARIAL_SMALL_FONT).render(s.get_title()[:17], True, util.WHITE)
+			title = self.rs.font(ARIAL_SMALL_FONT).render(s.get_title()[:17], True,
+			                                              self.rs.rs_config["song_select_text_color"])
 			title_pos = [box_pos[0] + 30, box_pos[1] + (100 - title.get_height()) / 2]
 			title_clip_rect = pg.Rect(0, 0, 360, title.get_height())
-			level_sf = self.rs.font(MOLOT_SMALL2_FONT).render(str(s.get_level(self.difficulty)), True, util.WHITE)
+			level_sf = self.rs.font(MOLOT_SMALL2_FONT).render(str(s.get_level(self.difficulty)), True,
+			                                                  self.rs.rs_config["song_select_text_color"])
 			level_pos = [box_pos[0] + 400 - 15 - level_sf.get_width() / 2,
 			             box_pos[1] + 100 - 15 - level_sf.get_height() / 2]
 			draw_box()
@@ -123,7 +125,8 @@ class SongBoxes:
 			now_box = pg.transform.smoothscale(self.rs.graphic(BOX_IMAGES)[self.difficulty], [420, 120])
 			box_polygon = ((box_pos[0], box_pos[1]), (box_pos[0] + 378, box_pos[1]),
 			               (box_pos[0] + 419, box_pos[1] + 119), (box_pos[0] + 45, box_pos[1] + 119))
-			title_tmp = self.rs.font(ARIAL_REGULAR_FONT).render(center_song.get_title()[:14], True, util.WHITE)
+			title_tmp = self.rs.font(ARIAL_REGULAR_FONT).render(center_song.get_title()[:14], True,
+			                                                    self.rs.rs_config["song_select_text_color"])
 			if title_tmp.get_width() > 400:
 				title = pg.surface.Surface((title_tmp.get_width() * 2 + 50, title_tmp.get_height()),
 				                           pg.SRCALPHA)
@@ -139,7 +142,7 @@ class SongBoxes:
 				title_clip_rect = [0, 0, *title.get_size()]
 			
 			level_sf = self.rs.font(MOLOT_REGULAR_FONT).render\
-				(str(center_song.get_level(self.difficulty)), True, util.WHITE)
+				(str(center_song.get_level(self.difficulty)), True, self.rs.rs_config["song_select_text_color"])
 			level_pos = [box_pos[0] + 420 - 25 - level_sf.get_width() / 2,
 			             box_pos[1] + 120 - 25 - level_sf.get_height() / 2]
 			draw_box()

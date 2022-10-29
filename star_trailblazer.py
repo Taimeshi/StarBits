@@ -3,8 +3,7 @@ from tkinter import filedialog
 
 import pygame as pg
 import tkinter as tk
-import json
-import util
+
 from trailblazer_plots import *
 
 
@@ -29,7 +28,7 @@ def main():
     pixel_per_measure = 600
     file_path = ""
     selecting_type = NoteType.TAP
-    selecting_plot: PlotData | None = None
+    selecting_plots: list[PlotData] = []
     dragging_plot: bool = False
     
     splitting_box = util.TextBox(rs)
@@ -130,9 +129,9 @@ def main():
                         plots_columns[p2.column] = str(3 + p2_lp.is_end)
                 plot_text_tmp = "".join(plots_columns)
             
-                for sp in speed_changes:
-                    if sp.measure == m_i and sp.beat * beat_split_lcm / sp.splitting == b_i:
-                        plot_text_tmp += f"s{int(sp.speed * 10)}"
+                for sp2 in speed_changes:
+                    if sp2.measure == m_i and sp2.beat * beat_split_lcm / sp2.splitting == b_i:
+                        plot_text_tmp += f"s{int(sp2.speed * 10)}"
                         break
                 text[-1].append(plot_text_tmp)
     
@@ -153,13 +152,15 @@ def main():
             return
         save(path)
     
-    def calc_note_pos():
+    def calc_note_pos(offset: list[float, float] = None):
         """
         マウスの座標からレーン、小節、拍を返します。
         :return: レーン、小節、拍
         """
-        d = 610 - mouse.y + scroll
-        clm = int((mouse.x - 250) / 100)
+        if offset is None:
+            offset = [0, 0]
+        d = 610 - (mouse.y - offset[1]) + scroll
+        clm = int(((mouse.x - offset[0]) - 250) / 100)
         int_ms = int(d / pixel_per_measure)
         tmp = d - int_ms * pixel_per_measure
         bt = 0
@@ -174,11 +175,34 @@ def main():
                 break
         return clm, int_ms, bt
     
+    def calc_rounded_mouse_pos():
+        clm, int_ms, bt = calc_note_pos()
+        return [250 + clm * 100 + 50, 600 + scroll - (int_ms + bt / splitting_box.value) * pixel_per_measure]
+    
     def cancel_plot_selecting():
+        nonlocal selecting_plots
         for p2 in plots:
             p2.selecting = False
         for lp in sum([ln2.points_as_plot() for ln2 in longs], []):
             lp.selecting = False
+        selecting_plots = []
+    
+    def get_plots_move_offset(sp_idx: int):
+        return [mouse.x - (250 + 50 + selecting_plots[sp_idx].column * 100),
+                mouse.y - (610 - scroll - selecting_plots[sp_idx].measure_as_float * pixel_per_measure)]
+    
+    def select_plot(plot: PlotData):
+        nonlocal clicked_any_plots, dragging_plot
+        if not keys.ctrl_clicking:
+            cancel_plot_selecting()
+        plot.selecting = True
+        selecting_plots.append(plot)
+        clicked_any_plots = True
+        dragging_plot = True
+        for slp in selecting_plots:
+            d_tmp = slp.measure_as_float * pixel_per_measure
+            slp.selecting_offset = [mouse.x - (250 + 50 + slp.column * 100),
+                                    mouse.y - (610 + scroll - d_tmp)]
     
     while True:
         tmr += 1
@@ -282,6 +306,7 @@ def main():
                 sc.blit(rs.graphic(PLOT_SELECTING_HIGHLIGHT_IMG),
                         [250 + 50 + ln.start.column * 100 - rs.graphic(PLOT_SELECTING_HIGHLIGHT_IMG).get_width() / 2,
                          610 + scroll - start_distance - rs.graphic(PLOT_SELECTING_HIGHLIGHT_IMG).get_height() / 2])
+            
             # 始点のフォーカス
             if ln.start.mouse_on_plots(mouse, scroll, pixel_per_measure):
                 if not ln.start.selecting:
@@ -289,12 +314,7 @@ def main():
                             [250 + 50 + ln.column * 100 - rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG).get_width() / 2,
                              610 + scroll - start_distance - rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG).get_height() / 2])
                 if mouse.just_pressed(0):
-                    cancel_plot_selecting()
-                    ln.start.selecting = True
-                    selecting_plot = ln.start
-                    clicked_any_plots = True
-                    if ln.start.selecting:
-                        dragging_plot = True
+                    select_plot(ln.start)
             
             # 終点の選択
             if ln.end.selecting:
@@ -307,13 +327,9 @@ def main():
                     sc.blit(rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG),
                             [250 + 50 + ln.column * 100 - rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG).get_width() / 2,
                              610 + scroll - end_distance - rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG).get_height() / 2])
+                # 選択
                 if mouse.just_pressed(0):
-                    cancel_plot_selecting()
-                    ln.end.selecting = True
-                    selecting_plot = ln.end
-                    clicked_any_plots = True
-                    if ln.end.selecting:
-                        dragging_plot = True
+                    select_plot(ln.end)
         
         # Plotの描画  メモ: 判定バーの中心y座標は610
         for p_i, p in enumerate(plots):
@@ -336,13 +352,9 @@ def main():
                     sc.blit(rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG),
                             [250 + 50 + p.column * 100 - rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG).get_width() / 2,
                              610 + scroll - distance - rs.graphic(PLOT_FOCUSING_HIGHLIGHT_IMG).get_height() / 2])
+                # 選択
                 if mouse.just_pressed(0):
-                    cancel_plot_selecting()
-                    p.selecting = True
-                    selecting_plot = p
-                    clicked_any_plots = True
-                    if p.selecting:
-                        dragging_plot = True
+                    select_plot(p)
         
         if mouse.just_pressed(0) and not clicked_any_plots:
             cancel_plot_selecting()
@@ -350,9 +362,43 @@ def main():
         if dragging_plot and not mouse.pressing(0):
             dragging_plot = False
         
-        if dragging_plot:
-            selecting_plot.move_plot(*calc_note_pos(), splitting_box.value)
+        if dragging_plot and not selecting_plots:
+            dragging_plot = False
         
+        # ノーツの移動
+        if dragging_plot:
+            for sp in selecting_plots:
+                sp.move_plot(*calc_note_pos(sp.selecting_offset), splitting_box.value)
+        
+        # 設置中のロング
+        if long_start_tmp:
+            sc.blit(rs.graphic(NOTE_IMAGES)[NoteType.LONG],
+                    [250 + 50 + long_start_tmp[0] * 100 - rs.graphic(NOTE_IMAGES)[NoteType.LONG].get_width() / 2,
+                     610 + scroll - (long_start_tmp[1] + long_start_tmp[3] / long_start_tmp[2]) * pixel_per_measure
+                     - rs.graphic(NOTE_IMAGES)[NoteType.LONG].get_height() / 2])
+            
+            y1 = 610 + scroll - (long_start_tmp[1] + long_start_tmp[3] / long_start_tmp[2]) * pixel_per_measure
+            y2 = calc_rounded_mouse_pos()[1]
+            if y2 > y1:
+                y1, y2 = y2, y1
+            pg.draw.rect(sc, util.LONG_COLORS[0][0], [250 + long_start_tmp[0] * 100, y2,
+                                                      100, y1 - y2])
+        
+        # ノーツの削除
+        if selecting_plots:
+            if keys.just_pressed(pg.K_BACKSPACE) or keys.just_pressed(pg.K_DELETE):
+                plots_removed = selecting_plots
+                cancel_plot_selecting()
+                for pr in plots_removed:
+                    if pr.note_type != NoteType.LONG:
+                        plots.remove(pr)
+                    else:
+                        for ln in longs:
+                            if pr in ln.points_as_plot():
+                                longs.remove(ln)
+                                break
+        
+        # ノーツの設置
         if mouse.just_pressed(2):
             column, int_measure, beat = calc_note_pos()
             if selecting_type != NoteType.LONG:

@@ -183,6 +183,7 @@ def main():
         with open(os.path.join(PROJ_PATH, "config.json"), "r", encoding="utf-8_sig") as jr:
             config = json.load(jr)
         setting_data = Setting(config, rs)
+        rs.show_loading_bar(sc)
     
     while True:
         
@@ -327,11 +328,12 @@ def main():
             
             # 楽曲情報の描画
             selecting_info_sf.blit(song_boxes.selecting_song.get_jacket(), [550, 100])
-            info_title = rs.font(ARIAL_SMALL_FONT).render(song_boxes.selecting_song.get_title(), True, util.WHITE)
+            info_title = rs.font(ARIAL_SMALL_FONT).render(song_boxes.selecting_song.get_title(), True,
+                                                          rs.rs_config["song_select_text_color"])
             selecting_info_sf.blit(info_title, [480 + 198 - info_title.get_width() / 2, 400])
             selecting_info_sf.blit(
                 rs.font(ARIAL_SMALL_FONT).render(f"リクエスト: {song_boxes.selecting_song.get_whose_request()}",
-                                                 True, util.WHITE), [500, 500])
+                                                 True, rs.rs_config["song_select_text_color"]), [500, 500])
             if keys.just_pressed(pg.K_F1):
                 select_option = not select_option
             
@@ -356,8 +358,8 @@ def main():
             if select_option:
                 selecting_info_sf.blit(rs.graphic(OPTION_IMG), [600, 50])
                 option_texts = {"note_speed": [
-                    rs.font(ARIAL_SMALL_FONT).render(f'note speed: {config["game"]["note_speed"]}', True, util.WHITE),
-                    raise_note_speed]}
+                    rs.font(ARIAL_SMALL_FONT).render(f'note speed: {config["game"]["note_speed"]}', True,
+                                                     rs.rs_config["song_select_text_color"]), raise_note_speed]}
                 for t_i, t in enumerate(option_texts.values()):
                     selecting_info_sf.blit(t[0], [600 + 10, 50 + 50 + 25 + 60 * t_i - t[0].get_height() / 2])
                     if mouse.just_pressed(0) and mouse.in_rect(600, 50 + 50 + 60 * t_i, 280, 50) and t[1]:
@@ -459,6 +461,9 @@ def main():
             if difficulty == Difficulty.EASY:
                 sc.blit(rs.graphic(EASY_LANE_DISABLE_IMG), [0, -700 + (tmr * 5 % 700)])
                 sc.blit(rs.graphic(EASY_LANE_DISABLE_IMG), [0, (tmr * 5 % 700)])
+            
+            if difficulty != Difficulty.IMP:
+                sc.blit(rs.graphic(KEY_GUIDE_IMG), [177, 514])
             
             # ノーツの描画
             notes, long = playing_song.calc_drawing_data(keys, note_sizes, auto_play)

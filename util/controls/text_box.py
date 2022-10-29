@@ -62,7 +62,7 @@ class TextBox(util.InputControl):
             keys_name = "1234567890qwertyuiopasdfghjklzxcvbnm"
             for k in keys_name:
                 if eval(f"keys.just_pressed(pg.K_{k})"):
-                    self._value_tmp += k
+                    self._value_tmp += k if not keys.shift_clicking else k.upper()
             if keys.just_pressed(pg.K_PERIOD):
                 self._value_tmp += "."
     

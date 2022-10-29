@@ -1,3 +1,5 @@
+import json
+
 import pygame as pg
 import os
 import sys
@@ -95,6 +97,7 @@ LEVEL_CLEAR_IMG = "level_clear"
 LEVEL_FAILED_IMG = "level_failed"
 COMBO_IMG = "combo"
 EASY_LANE_DISABLE_IMG = "easy_lane_disable"
+KEY_GUIDE_IMG = "key_guide"
 TAP_PARTICLES_IMG = "tap_particles"
 TAP_PARTICLE2_IMG = "tap_particle2"
 RELOAD_IMG = "reload"
@@ -189,6 +192,7 @@ resource_members = {ResourceCategory.GRAPHICS: [
     [GAME_FILENAME, LEVEL_FAILED_IMG],
     [GAME_FILENAME, COMBO_IMG],
     [GAME_FILENAME, EASY_LANE_DISABLE_IMG],
+    [GAME_FILENAME, KEY_GUIDE_IMG],
     [GAME_FILENAME, TAP_PARTICLES_IMG],
     [GAME_FILENAME, TAP_PARTICLE2_IMG],
     [GAME_FILENAME, RELOAD_IMG],
@@ -242,6 +246,8 @@ class Resources:
         self.loading: bool = False
         self.loading_category: ResourceCategory = ResourceCategory.GRAPHICS
         self.loading_iterator: int = 0
+        with open(os.path.join(self._TEXTURE_PATH, "config.json"), "r", encoding="utf-8_sig") as j:
+            self.rs_config: dict = json.load(j)
     
     def start_load(self):
         """
@@ -315,6 +321,8 @@ class Resources:
         self._GRAPHICS_PATH = os.path.join(self._TEXTURE_PATH, "graphics")
         self._SE_PATH = os.path.join(self._TEXTURE_PATH, "se")
         self._BGM_PATH = os.path.join(self._TEXTURE_PATH, "bgm")
+        with open(os.path.join(self._TEXTURE_PATH, "config.json"), "r", encoding="utf-8_sig") as j:
+            self.rs_config: dict = json.load(j)
         self.start_load()
     
     def graphic(self, name: str):

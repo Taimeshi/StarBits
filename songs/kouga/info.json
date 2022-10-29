@@ -1,0 +1,13 @@
+{
+  "title": "甲賀忍法帖",
+  "music": "kouga.mp3",
+  "jacket": "kouga.png",
+  "snp": ["kouga_easy.snp", "kouga_hard.snp", "kouga_imp.snp"],
+  "request": "いわね　りむ",
+  "level": [2, 4, 8],
+  "demo": [56, 80],
+  "bpm": 178,
+  "offset": -1,
+  "time": 4,
+  "rank_max": [81500, 348000, 784000]
+}
